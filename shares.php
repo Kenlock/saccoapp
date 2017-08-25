@@ -1,16 +1,41 @@
 <?php
 error_reporting(0);
+include("database.php");
+session_start();
+ if($_SESSION['admin']==""){
+    header("location:index.php");
+  }
+?>
+<?php
 date_default_timezone_set('Africa/Nairobi');
 include('database.php');
 if(isset($_POST['share'])){
-  $nid=htmlentities($_POST['nid']);
-  $amount=htmlentities($_POST['amount']);
+$nid=$_POST['nid'];
+$amount=$_POST['amount'];
 $query=$con->prepare("SELECT * FROM members WHERE nid=:nid");
 $query->execute(array(":nid"=>$nid));
-$data=$query->fetchAll();
-var_dump($data);
-
+$data=$query->fetch();
+if($data['membership_type']=="group"){
+  $stm=$con->prepare("SELECT groupname FROM groups WHERE nid=:nid LIMIT 1");
+  $stm->execute(array(":nid"=>$nid));
+  $rows=$stm->fetch();
+  $fees=$amount*0.8;
+  $shares=$amount*0.2;
+  $contribution=$amount;
+  $date=date('Y-m-d H:i:s');
+  $sql=$con->prepare("INSERT INTO shares(nid,date_paid,amount,contribution)VALUES(:nid,:date_paid,:amount,:contribution)");
+  $sql->execute(array(":nid"=>$nid,":date_paid"=>$date,":amount"=>$fees,":contribution"=>$contribution));
+  $q=$con->prepare("INSERT INTO shares(group_name,date_paid,amount,contribution)VALUES(:group,:date_paid,:amount,:contribution)");
+  $q->execute(array(":group"=>$rows['groupname'],":date_paid"=>$date,":amount"=>$shares,":contribution"=>$contribution));
+  }
+else{
+   $date=date('Y-m-d H:i:s');
+  $m=$con->prepare("INSERT INTO shares(nid,date_paid,amount,contribution)VALUES(:nid,:date_paid,:amount,:contribution)");
+  $m->execute(array(":nid"=>$nid,":date_paid"=>$date,":amount"=>$amount,":contribution"=>$amount));
 }
+header("location:shares.php?contributed");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,57 +48,20 @@ var_dump($data);
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
   </head>
   <body>
-  <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">MWANZO BARAKA INFORMATION SYSTEM</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-      <li><a href="index.php">REGISTRATION</a></li>
-      <li><a href="members.php">MEMBERS</a></li>
-      <li class="active"><a href="shares.php">SHARES</a></li>
-
-            <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">LOANS<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">BORROW LOAN</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">REPAY LOAN</a></li>
-          </ul>
-        </li>
-      </ul>
-  
-      <ul class="nav navbar-nav navbar-right">
-       <li><a href="#">INCOME</a></li>
-       <li><a href="#">PENALTIES</a></li>
-       
-      
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+  <?php include("header.php");?>
    <div class="jumbotron" style="margin-top: -33px;height: 100px;padding-top: 10px;">
    <h2 class="text-center text-warning"><strong>Monthly Contributions</strong></h2>
    </div>
-   <div class="container">
+   <div class="container-fluid">
    <div class="row">
-   <div class="col-sm-8 col-lg-offset-2">
+   <div class="col-lg-8 col-sm-offset-2">
    <div class="well">
    <div class="text-center">
    <h3 class="text-warning"></h3>
-   <small>Fill in the form below with your personal data</small>
+   <small>Enter member national id and the amount he/she is contributing.</small>
    </div>
    <hr>
    <form action="<?php $_SERVER['PHP_SELF'];?>" method="post">
@@ -88,23 +76,21 @@ if (isset($_GET['contributed'])) {
     ?>
     </div>
     <div class="form-group">
-    <label for="full name">Full Name</label>
-    <input type="text" class="form-control" name="fname" placeholder="Full Name" required="">
-  </div>
-    <div class="form-group">
     <label for="full name">National ID No. <star class="text-danger">*</star></label>
     <input type="text" class="form-control" name="nid" placeholder="National ID No." required="">
   </div>
   <div class="form-group">
     <label for="exampleInputEmail1">Amount to be contributed <star class="text-danger">*</star></label>
-    <input type="text" class="form-control" name="amount" placeholder="Amount" required="">
+    <input type="number" class="form-control" name="amount" placeholder="Amount" required="" min="1000">
   </div>
-  <button type="submit" class="btn btn-success" name="share">Submit Details</button>
+  <button type="submit" class="btn btn-success btn-lg" name="share">Submit Details</button>
 </form>
 </div>
    </div>
    <!--end first row-->
-  
+   
+   </div>
+   <!--end first row-->
    <!--end second row-->
    </div><!--end row-->
    </div><!--end container-->
@@ -113,6 +99,7 @@ if (isset($_GET['contributed'])) {
     <script src="js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+
 
   </body>
 </html>

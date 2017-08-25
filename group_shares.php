@@ -7,12 +7,11 @@ session_start();
   }
 ?>
 <?php
-error_reporting(0);
 date_default_timezone_set('Africa/Nairobi');
 include('database.php');
-$query=$con->prepare("SELECT * FROM members ORDER BY id");
-$query->execute();
-$data=$query->fetchAll();
+$sql=$con->prepare("SELECT s.id,s.group_name,s.date_paid,s.amount,s.contribution,g.groupname FROM shares s INNER JOIN groups g ON s.group_name=g.groupname GROUP BY s.date_paid");
+$sql->execute();
+$dump=$sql->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,39 +24,42 @@ $data=$query->fetchAll();
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="css/datatables.min.css" rel="stylesheet">
-      <link href="css/style.css" rel="stylesheet">
+    <link href="css/datatables.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
   </head>
   <body>
- <?php include("header.php");?>
+<?php include("header.php");?>
    <div class="jumbotron" style="margin-top: -33px;height: 100px;padding-top: 10px;">
-   <h2 class="text-center text-warning"><strong>List of all Members</strong></h2>
+   <h2 class="text-center text-warning"><strong>Monthly Contributions</strong></h2>
    </div>
    <div class="container-fluid">
    <div class="row">
-   <div class="col-sm-10 col-lg-offset-1">
+     <div class="col-lg-10 col-sm-offset-1">
    <div class="well">
-   <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+   <div class="text-center">
+   <h3 class="text-warning"></h3>
+   <small>Group monthly contributions.</small>
+   </div>
+   <hr>
+    <div class="table-responsive">
+                    <table class="table table-striped table-condensed  dataTables-example" >
                     <thead>
                     <tr>
-                        <th>Full Name</th>
-                        <th>National ID</th>
-                        <th>Address</th>
-                        <th>Phone Number</th>
-                        <th>Membership Type</th>
+                         <th>Group Name</th>
+                        <th>Date of Contribution</th>
+                        <th>Amount Paid</th>
+                        <th>Shares</th>
                     </tr>
                     </thead>
                     <tbody>
                   <?php 
-                  foreach ($data as $rows) {
+                  foreach ($dump as $nums) {
                   ?>
                     <tr>
-                        <td class="center"><?php echo $rows['fname'];?></td>
-                        <td class="center"><?php echo $rows['nid'];?></td>
-                        <td class="center"><?php echo $rows['address'];?></td>
-                        <td class="center"><?php echo $rows['phone'];?></td>
-                        <td class="center"><?php echo $rows['membership_type'];?></td>
+                        <td class="center"><?php echo $nums['groupname'];?></td>
+                        <td class="center"><?php echo date('F d, Y | H:i:s', strtotime($nums['date_paid']));?></td>
+                        <td class="center"><?php echo $nums['contribution'];?></td>
+                        <td class="center"><?php echo $nums['amount'];?></td>
                      
                     </tr>
                     
@@ -74,7 +76,6 @@ $data=$query->fetchAll();
 </div>
    </div>
    <!--end first row-->
-  
    <!--end second row-->
    </div><!--end row-->
    </div><!--end container-->
@@ -83,7 +84,7 @@ $data=$query->fetchAll();
     <script src="js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-        <script src="js/datatables.min.js"></script>
+            <script src="js/datatables.min.js"></script>
  <script>
         $(document).ready(function(){
             $('.dataTables-example').DataTable({

@@ -7,12 +7,15 @@ session_start();
   }
 ?>
 <?php
-error_reporting(0);
 date_default_timezone_set('Africa/Nairobi');
 include('database.php');
-$query=$con->prepare("SELECT * FROM members ORDER BY id");
-$query->execute();
+if(isset($_GET['groupname'])){
+  $name=$_GET['groupname'];
+$query=$con->prepare("SELECT g.groupname,g.nid,m.nid,m.fname,m.address,m.phone FROM groups g INNER JOIN members m ON g.nid=m.nid WHERE g.groupname=:name");
+$query->execute(array(":name"=>$name));
 $data=$query->fetchAll();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,9 +32,9 @@ $data=$query->fetchAll();
       <link href="css/style.css" rel="stylesheet">
   </head>
   <body>
- <?php include("header.php");?>
+<?php include("header.php");?>
    <div class="jumbotron" style="margin-top: -33px;height: 100px;padding-top: 10px;">
-   <h2 class="text-center text-warning"><strong>List of all Members</strong></h2>
+   <h2 class="text-center text-warning"><strong>Members of <?php echo $_GET['groupname']; ?> Group</strong></h2>
    </div>
    <div class="container-fluid">
    <div class="row">
@@ -45,7 +48,6 @@ $data=$query->fetchAll();
                         <th>National ID</th>
                         <th>Address</th>
                         <th>Phone Number</th>
-                        <th>Membership Type</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -57,7 +59,6 @@ $data=$query->fetchAll();
                         <td class="center"><?php echo $rows['nid'];?></td>
                         <td class="center"><?php echo $rows['address'];?></td>
                         <td class="center"><?php echo $rows['phone'];?></td>
-                        <td class="center"><?php echo $rows['membership_type'];?></td>
                      
                     </tr>
                     

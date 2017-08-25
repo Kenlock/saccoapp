@@ -10,7 +10,7 @@ session_start();
 error_reporting(0);
 date_default_timezone_set('Africa/Nairobi');
 include('database.php');
-$query=$con->prepare("SELECT * FROM members ORDER BY id");
+$query=$con->prepare("SELECT DISTINCT(groupname) FROM groups");
 $query->execute();
 $data=$query->fetchAll();
 ?>
@@ -31,21 +31,18 @@ $data=$query->fetchAll();
   <body>
  <?php include("header.php");?>
    <div class="jumbotron" style="margin-top: -33px;height: 100px;padding-top: 10px;">
-   <h2 class="text-center text-warning"><strong>List of all Members</strong></h2>
+   <h2 class="text-center text-warning"><strong>List of all Registered groups</strong></h2>
    </div>
    <div class="container-fluid">
    <div class="row">
-   <div class="col-sm-10 col-lg-offset-1">
+   <div class="col-sm-6 col-sm-offset-3">
    <div class="well">
    <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-                        <th>Full Name</th>
-                        <th>National ID</th>
-                        <th>Address</th>
-                        <th>Phone Number</th>
-                        <th>Membership Type</th>
+                        <th>Group Name</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -53,11 +50,9 @@ $data=$query->fetchAll();
                   foreach ($data as $rows) {
                   ?>
                     <tr>
-                        <td class="center"><?php echo $rows['fname'];?></td>
-                        <td class="center"><?php echo $rows['nid'];?></td>
-                        <td class="center"><?php echo $rows['address'];?></td>
-                        <td class="center"><?php echo $rows['phone'];?></td>
-                        <td class="center"><?php echo $rows['membership_type'];?></td>
+                        <td class="center"><?php echo $rows['groupname'];?></td>
+                        <td class="center"><a href="group_members.php?groupname=<?php echo $rows['groupname'];?>" class="btn btn-info"><span class="glyphicon glyphicon-eye"></span> View Members</a></td>
+                  
                      
                     </tr>
                     

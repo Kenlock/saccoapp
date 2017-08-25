@@ -1,3 +1,8 @@
+
+
+body{
+  background:#00695c;
+}
 /* DATATABLES */
 table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc:after,
