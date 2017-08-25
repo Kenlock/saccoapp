@@ -1,5 +1,4 @@
 <?php
-error_reporting(0);
 include("database.php");
 session_start();
  if($_SESSION['admin']==""){
@@ -65,7 +64,6 @@ $data=$query->fetchAll();
                     <?php 
                 }
                   ?>
-                   
                     </tbody>
                     <tfoot>
                    

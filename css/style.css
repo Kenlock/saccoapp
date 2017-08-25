@@ -1,7 +1,5 @@
-
-
 body{
-  background:#00695c;
+  background:#f9fbe7;
 }
 /* DATATABLES */
 table.dataTable thead .sorting,
@@ -39,6 +37,42 @@ table.dataTable thead .sorting_desc_disabled {
 }
 div.dt-button-info {
   z-index: 100;
+}
+   ul.nav-tabs{
+  border-bottom: 1px solid #fafafa;
+}
+ul.nav-tabs li a{
+  background:  #800080;
+  padding:10px;
+  color: #FFF;
+  font-weight: bold;
+  font-size: 1.2em;
+  text-align: center;
+  border: 2px solid #fafafa;
+  font-family: 'Fira Sans', sans-serif;
+}
+ul.nav-tabs  > li > a:hover,
+ul.nav-tabs  > li > a:focus
+ {
+    color: #800080;
+    background: #FFF;  
+}
+ul.nav-tabs  > .active > a, 
+ul.nav-tabs  > .active > a:hover, 
+ul.nav-tabs  > .active > a:focus
+ {
+     color: #800080;
+    background: #FFF;  
+}
+
+  .tab-content{
+  padding: 10px;
+}
+.tab-content p{
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: normal;
+  font-size: 1.1em;
+  padding: 10px;
 }
 @media (max-width: 768px) {
   .html5buttons {

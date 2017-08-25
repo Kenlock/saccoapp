@@ -16,7 +16,7 @@ if(isset($_POST['individual'])){
   $phone=htmlentities($_POST['phone']);
   $type='individual';
 $sql=$con->prepare("INSERT INTO members(fname,nid,address,phone,membership_type) VALUES(:fname,:nid,:address,:phone,:type)");
-$sql->execute(array(":fname"=>$fname,":nid"=>$nid,":address"=>$address,":phone"=>$phone,"type"=>$type));
+$sql->execute(array(":fname"=>$fname,":nid"=>$nid,":address"=>$address,":phone"=>$phone,":type"=>$type));
 $query=$con->prepare("SELECT nid FROM members ORDER BY nid DESC LIMIT 1");
 $query->execute();
 $data=$query->fetch();

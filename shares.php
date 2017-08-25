@@ -81,7 +81,7 @@ if (isset($_GET['contributed'])) {
   </div>
   <div class="form-group">
     <label for="exampleInputEmail1">Amount to be contributed <star class="text-danger">*</star></label>
-    <input type="number" class="form-control" name="amount" placeholder="Amount" required="" min="1000">
+    <input type="number" class="form-control" name="amount" placeholder="Amount"  min="1000" required="">
   </div>
   <button type="submit" class="btn btn-success btn-lg" name="share">Submit Details</button>
 </form>

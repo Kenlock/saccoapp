@@ -50,7 +50,7 @@
             <li role="separator" class="divider"></li>
             <li><a href="borrow_loan.php">BORROW INDIVIDUAL LOAN</a></li>
             <li role="separator" class="divider"></li>
-               <li><a href="borrow_loan.php">BORROW GROUP LOAN</a></li>
+               <li><a href="group_loan.php">BORROW GROUP LOAN</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="#">REPAY LOAN</a></li>
           </ul>
@@ -59,7 +59,7 @@
       <ul class="nav navbar-nav navbar-right">
        <li><a href="#">INCOME</a></li>
        <li><a href="#">PENALTIES</a></li>      
-       <li><a href="logout.php">LOGOUT</a></li>      
+       <li><a href="logout.php"><span class="glyphicon glyphicon-off"></span> LOGOUT</a></li>      
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
