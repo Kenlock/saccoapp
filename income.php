@@ -26,20 +26,20 @@ date_default_timezone_set('Africa/Nairobi');
   <body>
 <?php include("header.php");?>
    <div class="jumbotron" style="margin-top: -33px;height: 100px;padding-top: 10px;">
-   <h2 class="text-center text-warning"><strong>Active Borrowed Loans</strong></h2>
+   <h2 class="text-center text-success"><strong>Income for the organization</strong></h2>
    </div>
    <div class="container">
    <div class="row">
      <div class="col-lg-12">
    <div class="well">
    <div class="text-center">
-   <h3 class="text-warning">Active Loans.</h3>
+   <h3 class="text-success">All Income.</h3>
    <hr>
    </div>
    <ul class="nav nav-tabs nav-justified">
-  <li class="active"><a href="#home" data-toggle="tab" aria-expanded="true">Member Loans</a></li>
-  <li class=""><a href="#profile" data-toggle="tab" aria-expanded="false">Group Loans</a></li>
-</ul>
+  <li class="active"><a href="#home" data-toggle="tab" aria-expanded="true">Income from registration</a></li>
+  <li class=""><a href="#profile" data-toggle="tab" aria-expanded="false">Income from loans</a></li>
+</ul> 
 <div id="myTabContent" class="tab-content">
   <div class="tab-pane fade active in" id="home">
   <hr>
@@ -47,15 +47,8 @@ date_default_timezone_set('Africa/Nairobi');
                     <table class="table table-striped dataTables-example" >
                     <thead>
                     <tr>
-                        <th>National ID</th>
-                        <th>Name</th>
-                        <th>Date Awarded Loan</th>
-                        <th>Principal Amount</th>
-                        <th>Amount</th>
-                        <th>Monthly Premiums</th>
-                        <th>Loan Period</th>
-                        <th>Total Interest Expected</th>
-                        <th>Loan Status</th>
+                        <th>National ID/Group Name</th>
+                        <th>Fees Paid</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -67,14 +60,8 @@ $dump=$sql->fetchAll();
                   ?>
                     <tr>
                         <td class="center"><?php echo $nums['nid'];?></td>
-                        <td class="center"><?php echo $nums['fname'];?></td>
-                        <td class="center"><?php echo date('F d, Y | H:i:s', strtotime($nums['date_awarded']));?></td>
-                        <td class="center"><?php echo $nums['principal'];?></td>
-                        <td class="center"><?php echo round($nums['amount'],1);?></td>
                         <td class="center"><?php echo round($nums['interest'],1);?></td>
-                        <td class="center"><?php echo $nums['loan_period']*12;?> months</td>
-                        <td class="center"><?php echo round($nums['amount']-$nums['principal'],1);?></td>
-                        <td class="center"><?php echo $nums['loan_status'];?></td>
+                   
                      
                     </tr>
                     
@@ -95,34 +82,30 @@ $dump=$sql->fetchAll();
                     <table class="table table-striped dataTables-example" >
                     <thead>
                     <tr>
-                        <th>Group Name</th>
-                        <th>Date Awarded Loan</th>
+                         <th>National ID/Group Name</th>
                         <th>Principal Amount</th>
-                        <th>Amount</th>
-                        <th>Monthly Premiums</th>
-                        <th>Loan Period</th>
-                        <th>Total Interest Expected</th>
-                        <th>Loan Status</th>
-                        <th>Action</th>
+                        <th>Amount Paid</th>
                     </tr>
                     </thead>
                     <tbody>
                   <?php 
-                  $sql=$con->prepare("SELECT l.id,l.groupname,l.date_awarded,l.interest,l.amount,l.loan_period,l.loan_status,l.principal,g.groupname FROM loans l INNER JOIN groups g ON l.groupname=g.groupname WHERE l.loan_status='active' GROUP BY l.date_awarded");
+             $sql=$con->prepare("SELECT l.id,l.nid,l.groupname,l.principal,r.loan_id,SUM(r.amount) AS amount FROM loans l JOIN loan_repayments r ON l.id=r.loan_id GROUP BY l.nid");
 $sql->execute();
-$dump=$sql->fetchAll();
-                  foreach ($dump as $nums) {
+$data=$sql->fetchAll();
+                  foreach ($data as $nums) {
                   ?>
                     <tr>
-                        <td class="center"><?php echo $nums['groupname'];?></td>
-                        <td class="center"><?php echo date('F d, Y | H:i:s', strtotime($nums['date_awarded']));?></td>
-                        <td class="center"><?php echo $nums['principal'];?></td>
-                        <td class="center"><?php echo round($nums['amount'],1);?></td>
-                        <td class="center"><?php echo round($nums['interest'],1);?></td>
-                        <td class="center"><?php echo $nums['loan_period']*12;?> months</td>
-                        <td class="center"><?php echo round($nums['amount']-$nums['principal'],1);?></td>
-                        <td class="center"><?php echo $nums['loan_status'];?></td>
-                        <td class="center"><a href="" class="btn btn-info btn-block">Clear Loan</a></td>
+                         <td class="center"><?php 
+                        if(isset($nums['nid'])){
+                          echo $nums['nid'];
+                        }
+                        else{
+                          echo $nums['groupname'];
+                        }
+                       ?></td>
+                        <td class="center">Kshs. <?php echo round($nums['principal'],1);?></td>
+                        <td class="center">Kshs. <?php echo round($nums['amount'],1);?></td>
+                     
                      
                     </tr>
                     
@@ -180,6 +163,18 @@ $dump=$sql->fetchAll();
         });
 
     </script>
+         <script type="text/javascript">
+        var hash = window.location.hash;
+  hash && $('ul.nav a[href="' + hash + '"]').tab('show');
 
+
+
+  $('.nav-tabs a').click(function (e) {
+    $(this).tab('show');
+    var scrollmem = $('body').scrollTop();
+    window.location.hash = this.hash;
+    $('html,body').scrollTop(scrollmem);
+  });
+    </script>
   </body>
 </html>

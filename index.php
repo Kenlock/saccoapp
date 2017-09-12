@@ -34,6 +34,11 @@ $error="Wrong Username or Password!";
 }
 
 }
+/**
+$url=file_get_contents("http://localhost/bank/public/api/customer_balances");
+$data=json_decode($url);
+print_r($data);
+*/
 ?>
 <!DOCTYPE html>
 <html lang="en">

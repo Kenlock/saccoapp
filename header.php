@@ -52,13 +52,14 @@
             <li role="separator" class="divider"></li>
                <li><a href="group_loan.php">BORROW GROUP LOAN</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">REPAY LOAN</a></li>
+            <li><a href="repay.php">REPAY LOAN</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="view_repayments.php">VIEW LOAN REPAYMENTS</a></li>
           </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-       <li><a href="#">INCOME</a></li>
-       <li><a href="#">PENALTIES</a></li>      
+       <li><a href="income.php">INCOME</a></li>
        <li><a href="logout.php"><span class="glyphicon glyphicon-off"></span> LOGOUT</a></li>      
       </ul>
     </div><!-- /.navbar-collapse -->
